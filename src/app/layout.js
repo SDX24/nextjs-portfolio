@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import MyNavBar from "@/components/MyNavBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,9 +12,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata = {
-  title: "My Portfolio",
-  description: "Stefan's Portfolio built with Next.js",
+  title: "Stefan Dorosh Portfolio",
+  description: "Full Stack Web Developer Portfolio",
 };
 
 export default function RootLayout({ children }) {
@@ -22,6 +24,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <MyNavBar />
         {children}
       </body>
     </html>

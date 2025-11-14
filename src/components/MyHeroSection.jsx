@@ -24,10 +24,10 @@ export default function MyHero() {
             <div className="flex-1 space-y-4">
               <CardHeader className="p-0">
                 <CardTitle className="text-3xl md:text-4xl lg:text-5xl font-bold">
-                  Your Name
+                  Stefan Dorosh
                 </CardTitle>
                 <CardDescription className="text-lg md:text-xl mt-2">
-                  Your Role/Title
+                  Full Stack Web Developer
                 </CardDescription>
               </CardHeader>
               

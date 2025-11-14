@@ -3,28 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const projects = [
-  {
-    title: "Project One",
-    desc: "Short description of project one showcasing key features and technologies used.",
-    img: "https://placehold.co/300.png",
-    link: "#"
-  },
-  {
-    title: "Project Two",
-    desc: "Short description of project two showcasing key features and technologies used.",
-    img: "https://placehold.co/300.png",
-    link: "#"
-  },
-  {
-    title: "Project Three",
-    desc: "Short description of project three showcasing key features and technologies used.",
-    img: "https://placehold.co/300.png",
-    link: "#"
-  }
-]
-
-export default function ProjectPreviewCard({ count = 3 }) {
+export default function ProjectPreviewCard({ projects = [], count = 3 }) {
   const displayedProjects = projects.slice(0, count)
 
   return (
@@ -46,7 +25,7 @@ export default function ProjectPreviewCard({ count = 3 }) {
                 <div className="relative w-full aspect-video overflow-hidden rounded-t-lg">
                   <Skeleton className="absolute inset-0" />
                   <Image
-                    src={project.img}
+                    src={project.image}
                     alt={project.title}
                     fill
                     className="object-cover"
@@ -56,7 +35,7 @@ export default function ProjectPreviewCard({ count = 3 }) {
               
               <CardContent className="flex-1 p-6">
                 <CardTitle className="text-xl mb-2">{project.title}</CardTitle>
-                <CardDescription className="text-base">{project.desc}</CardDescription>
+                <CardDescription className="text-base">{project.description}</CardDescription>
               </CardContent>
               
               <CardFooter className="p-6 pt-0">
