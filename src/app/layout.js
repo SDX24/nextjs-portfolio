@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MyNavBar from "@/components/MyNavBar";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,11 +22,19 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+                 <head>
+                <script
+                    type="module"
+                    defer
+                    src="https://cdn.jsdelivr.net/gh/imananoosheh/github-contributions-fetch@latest/github_calendar_widget.js"
+                ></script>
+            </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <MyNavBar />
         {children}
+        <Toaster />
       </body>
     </html>
   );
