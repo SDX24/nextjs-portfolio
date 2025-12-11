@@ -1,10 +1,15 @@
-import Image from 'next/image'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProjectPreviewCard({ projects = [], count = 3 }) {
-  const displayedProjects = projects.slice(0, count)
+  const { isSignedIn } = useUser();
+  const displayedProjects = projects.slice(0, count);
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
@@ -19,34 +24,39 @@ export default function ProjectPreviewCard({ projects = [], count = 3 }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-          {displayedProjects.map((project, index) => (
-            <Card key={index} className="flex flex-col h-full">
+          {displayedProjects.map((project) => (
+            <Card key={project.id} className="flex flex-col h-full">
               <CardHeader className="p-0">
                 <div className="relative w-full aspect-video overflow-hidden rounded-t-lg">
                   <Skeleton className="absolute inset-0" />
-                  <Image
+                  <img
                     src={project.image}
                     alt={project.title}
-                    fill
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </CardHeader>
-              
+
               <CardContent className="flex-1 p-6">
                 <CardTitle className="text-xl mb-2">{project.title}</CardTitle>
                 <CardDescription className="text-base">{project.description}</CardDescription>
               </CardContent>
-              
-              <CardFooter className="p-6 pt-0">
-                <Button asChild className="w-full">
+
+              <CardFooter className="p-6 pt-0 flex gap-2">
+                <Button asChild className="flex-1">
                   <a href={project.link}>View Project</a>
                 </Button>
+                
+                {isSignedIn && (
+                  <Button asChild variant="outline" className="flex-1">
+                    <Link href={`/projects/${project.id}/edit`}>Edit</Link>
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,23 +1,38 @@
-export async function POST(req) {
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { z } from "zod";
+import { insertProject } from "@/lib/db";
+
+const projectSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  image: z.string().url(),
+  link: z.string().url(),
+  keywords: z.array(z.string()).optional(),
+});
+
+export async function POST(request) {
+  const { userId } = await auth();
+  
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const formData = await req.formData();
-    const title = formData.get("title");
-    const description = formData.get("description");
-    const img = formData.get("img");
-    const link = formData.get("link");
-    const keywords = JSON.parse(formData.get("keywords") || "[]");
+    const formData = await request.formData();
+    const data = {
+      title: formData.get("title"),
+      description: formData.get("description"),
+      image: formData.get("img"),
+      link: formData.get("link"),
+      keywords: JSON.parse(formData.get("keywords") || "[]"),
+    };
 
-    const project = { title, description, img, link, keywords };
+    const validated = projectSchema.parse(data);
+    const project = await insertProject(validated);
     
-    console.log("New project received:", project);
-
-    // TODO: validate with Zod server-side
-    // TODO: persist to DB
-    // TODO: revalidatePath("/projects")
-
-    return Response.json({ ok: true, project }, { status: 201 });
-  } catch (err) {
-    console.error(err);
-    return Response.json({ ok: false, error: "Invalid payload" }, { status: 400 });
+    return NextResponse.json({ message: "Project created", data: project }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
