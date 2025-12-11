@@ -23,11 +23,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
                  <head>
-                <script
+                {/* <script
                     type="module"
                     defer
                     src="https://cdn.jsdelivr.net/gh/imananoosheh/github-contributions-fetch@latest/github_calendar_widget.js"
-                ></script>
+                ></script> */}
             </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

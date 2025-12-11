@@ -1,6 +1,6 @@
 import MyHero from '@/components/MyHeroSection'
 import ProjectPreviewCard from '@/components/project-preview-card'
-import GitHubCalendarWrapper from '@/components/github-calendar-wrapper'
+// import GitHubCalendarWrapper from '@/components/github-calendar-wrapper'
 
 export default async function Home() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`, { 
@@ -15,7 +15,7 @@ export default async function Home() {
         <ProjectPreviewCard projects={projects} count={3} />
         
         <section className="container py-12 px-4">
-          <GitHubCalendarWrapper />
+          {/* <GitHubCalendarWrapper /> */}
         </section>
       </main>
     </div>
