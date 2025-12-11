@@ -45,9 +45,11 @@ export default function EditProjectForm({ project, uuid }) {
         router.push(`/projects/${uuid}`);
         router.refresh();
       } else {
-        toast.error("Failed to update project");
+        const error = await response.json();
+        toast.error(error.error || "Failed to update project");
       }
     } catch (error) {
+      console.error("Update error:", error);
       toast.error("Network error occurred");
     }
   }
@@ -110,7 +112,7 @@ export default function EditProjectForm({ project, uuid }) {
             <FormItem>
               <FormLabel>Image URL</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="https://example.com/image.png" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -124,7 +126,7 @@ export default function EditProjectForm({ project, uuid }) {
             <FormItem>
               <FormLabel>Project Link</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="https://your-project.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

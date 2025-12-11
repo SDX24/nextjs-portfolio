@@ -10,11 +10,12 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: resolve(__dirname, '../../.env.local') });
 
 // Now import db functions after env vars are loaded
-const { ensureProjectsTable, seedProjectsTable } = await import("../lib/db.js");
+const { ensureProjectsTable, seedProjectsTable, ensureHeroTable } = await import("../lib/db.js");
 
 async function seed() {
   console.log("Creating tables...");
   await ensureProjectsTable();
+  await ensureHeroTable();
 
   console.log("Seeding projects...");
   await seedProjectsTable();

@@ -1,15 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProjectPreviewCard({ projects = [], count = 3 }) {
   const { isSignedIn } = useUser();
   const displayedProjects = projects.slice(0, count);
+
+  console.log("Projects in preview card:", displayedProjects); // Debug log
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
@@ -23,39 +23,59 @@ export default function ProjectPreviewCard({ projects = [], count = 3 }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-          {displayedProjects.map((project) => (
-            <Card key={project.id} className="flex flex-col h-full">
-              <CardHeader className="p-0">
-                <div className="relative w-full aspect-video overflow-hidden rounded-t-lg">
-                  <Skeleton className="absolute inset-0" />
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </CardHeader>
+        {displayedProjects.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">No projects yet.</p>
+            {isSignedIn && (
+              <Button asChild>
+                <Link href="/projects/new">Create Your First Project</Link>
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+            {displayedProjects.map((project) => {
+              // Debug: Check if project.id exists
+              if (!project.id) {
+                console.error("Project missing ID:", project);
+              }
 
-              <CardContent className="flex-1 p-6">
-                <CardTitle className="text-xl mb-2">{project.title}</CardTitle>
-                <CardDescription className="text-base">{project.description}</CardDescription>
-              </CardContent>
+              return (
+                <Card key={project.id} className="flex flex-col h-full">
+                  <CardHeader className="p-0">
+                    <div className="relative w-full aspect-video overflow-hidden rounded-t-lg">
+                      <img
+                        src={project.image || "https://placehold.co/400x300"}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = "https://placehold.co/400x300";
+                        }}
+                      />
+                    </div>
+                  </CardHeader>
 
-              <CardFooter className="p-6 pt-0 flex gap-2">
-                <Button asChild className="flex-1">
-                  <a href={project.link}>View Project</a>
-                </Button>
-                
-                {isSignedIn && (
-                  <Button asChild variant="outline" className="flex-1">
-                    <Link href={`/projects/${project.id}/edit`}>Edit</Link>
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+                  <CardContent className="flex-1 p-6">
+                    <CardTitle className="text-xl mb-2">{project.title}</CardTitle>
+                    <CardDescription className="text-base">{project.description}</CardDescription>
+                  </CardContent>
+
+                  <CardFooter className="p-6 pt-0 flex gap-2">
+                    <Button asChild variant="default" className="flex-1">
+                      <Link href={`/projects/${project.id}`}>View Project</Link>
+                    </Button>
+                    
+                    {isSignedIn && (
+                      <Button asChild variant="outline" className="flex-1">
+                        <Link href={`/projects/${project.id}/edit`}>Edit</Link>
+                      </Button>
+                    )}
+                  </CardFooter>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

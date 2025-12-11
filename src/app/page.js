@@ -1,23 +1,21 @@
-import MyHero from '@/components/MyHeroSection'
-import ProjectPreviewCard from '@/components/project-preview-card'
-// import GitHubCalendarWrapper from '@/components/github-calendar-wrapper'
+import MyHero from '@/components/MyHeroSection';
+import ProjectPreviewCard from '@/components/project-preview-card';
+import { fetchProjects } from '@/lib/db';
+
+// Force dynamic rendering
+export const revalidate = 0;
 
 export default async function Home() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects`, { 
-    cache: "no-store" 
-  });
-  const { projects } = await res.json();
+  const projects = await fetchProjects();
+  
+  console.log("Projects on homepage:", projects); // Debug log
 
   return (
     <div className="flex flex-col w-full min-h-screen">
       <main className="flex-1">
         <MyHero />
         <ProjectPreviewCard projects={projects} count={3} />
-        
-        <section className="container py-12 px-4">
-          {/* <GitHubCalendarWrapper /> */}
-        </section>
       </main>
     </div>
-  )
+  );
 }

@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { fetchProjects } from "@/lib/db";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import HeroEditorForm from "@/components/hero-editor-form";
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -23,7 +24,14 @@ export default async function DashboardPage() {
           Welcome, {user?.firstName || user?.emailAddresses[0]?.emailAddress}!
         </p>
         
-        <div className="grid gap-6">
+        <div className="grid gap-8">
+          {/* Hero Editor Section */}
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">Hero Section</h2>
+            <HeroEditorForm />
+          </div>
+
+          {/* Projects Section */}
           <div className="p-6 border rounded-lg">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-semibold">Your Projects ({projects.length})</h2>

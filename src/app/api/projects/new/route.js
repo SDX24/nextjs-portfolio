@@ -23,7 +23,7 @@ export async function POST(request) {
     const data = {
       title: formData.get("title"),
       description: formData.get("description"),
-      image: formData.get("img"),
+      image: formData.get("img"), // ← Gets "img" from form but stores as "image"
       link: formData.get("link"),
       keywords: JSON.parse(formData.get("keywords") || "[]"),
     };
@@ -33,6 +33,10 @@ export async function POST(request) {
     
     return NextResponse.json({ message: "Project created", data: project }, { status: 201 });
   } catch (error) {
+    console.error("POST /api/projects/new error:", error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors }, { status: 400 });
+    }
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
