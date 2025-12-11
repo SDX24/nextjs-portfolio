@@ -4,12 +4,11 @@ import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function ProjectPreviewCard({ projects = [], count = 3 }) {
   const { isSignedIn } = useUser();
   const displayedProjects = projects.slice(0, count);
-
-  console.log("Projects in preview card:", displayedProjects); // Debug log
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
@@ -34,46 +33,63 @@ export default function ProjectPreviewCard({ projects = [], count = 3 }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-            {displayedProjects.map((project) => {
-              // Debug: Check if project.id exists
-              if (!project.id) {
-                console.error("Project missing ID:", project);
-              }
+            {displayedProjects.map((project) => (
+              <Card key={project.id} className="flex flex-col h-full">
+                <CardHeader className="p-0">
+                  <div className="relative w-full aspect-video overflow-hidden rounded-t-lg">
+                    <img
+                      src={project.image || "https://placehold.co/400x300"}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = "https://placehold.co/400x300";
+                      }}
+                    />
+                  </div>
+                </CardHeader>
 
-              return (
-                <Card key={project.id} className="flex flex-col h-full">
-                  <CardHeader className="p-0">
-                    <div className="relative w-full aspect-video overflow-hidden rounded-t-lg">
-                      <img
-                        src={project.image || "https://placehold.co/400x300"}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.src = "https://placehold.co/400x300";
-                        }}
-                      />
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="flex-1 p-6">
-                    <CardTitle className="text-xl mb-2">{project.title}</CardTitle>
-                    <CardDescription className="text-base">{project.description}</CardDescription>
-                  </CardContent>
-
-                  <CardFooter className="p-6 pt-0 flex gap-2">
-                    <Button asChild variant="default" className="flex-1">
-                      <Link href={`/projects/${project.id}`}>View Project</Link>
-                    </Button>
-                    
-                    {isSignedIn && (
-                      <Button asChild variant="outline" className="flex-1">
-                        <Link href={`/projects/${project.id}/edit`}>Edit</Link>
-                      </Button>
+                <CardContent className="flex-1 p-6">
+                  <CardTitle className="text-xl mb-2">{project.title}</CardTitle>
+                  <CardDescription className="text-base mb-4">
+                    {project.description}
+                  </CardDescription>
+                  
+                  {/* Display tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {project.keywords?.slice(0, 3).map((keyword) => (
+                      <Badge key={keyword} variant="secondary" className="text-xs">
+                        {keyword}
+                      </Badge>
+                    ))}
+                    {project.keywords?.length > 3 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{project.keywords.length - 3}
+                      </Badge>
                     )}
-                  </CardFooter>
-                </Card>
-              );
-            })}
+                  </div>
+                </CardContent>
+
+                <CardFooter className="p-6 pt-0 flex gap-2">
+                  <Button asChild variant="default" className="flex-1">
+                    <Link href={`/projects/${project.id}`}>View Project</Link>
+                  </Button>
+                  
+                  {isSignedIn && (
+                    <Button asChild variant="outline" className="flex-1">
+                      <Link href={`/projects/${project.id}/edit`}>Edit</Link>
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {projects.length > count && (
+          <div className="text-center mt-8">
+            <Button asChild variant="outline" size="lg">
+              <Link href="/projects">View All Projects →</Link>
+            </Button>
           </div>
         )}
       </div>
